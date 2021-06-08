@@ -1,11 +1,29 @@
 --1--
-
+INSERT INTO Doctor
+SELECT 9999, 'Some Doctor', 'Some Specialty'
+WHERE NOT EXISTS (
+  SELECT *
+  FROM Doctor
+  WHERE doctor_id = 9999
+);
 
 --2--
-
+INSERT INTO Patient
+SELECT 9999, 'Some Patient', 'M', 99, 'Some Address', 9
+WHERE NOT EXISTS (
+  SELECT *
+  FROM Patient
+  WHERE Patient_id = 9999
+);
 
 --3--
-
+INSERT INTO Appointment
+SELECT 9999, '2021-01-01', '1:00-2:00', 'PA'
+WHERE NOT EXISTS (
+  SELECT *
+  FROM Appointment
+  WHERE appointment_id = 9999
+);
 
 --4--
 
