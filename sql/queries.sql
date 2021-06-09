@@ -49,7 +49,7 @@ WHERE A.adate = '2021-01-01' AND A.appnt_ID = S.aid AND S.hid IN
   SELECT S.hid
   FROM Hospital H, searches S
   WHERE H.name = 'Some Hospital' AND H.hospital_ID = S.hid
-)
+);
 
 --7--
 SELECT D.doctor_ID, D.name, D.specialty, A.status, count(A.status) AS C
@@ -62,4 +62,4 @@ ORDER BY Desc C, doctor_ID;
 SELECT D.doctor_ID, D.name, D.specialty, count(S.pid)
 FROM Doctor D, Searches S, has_appointment H, Appointment A
 WHERE A.status = 'PA' AND A.appnt_ID = S.aid AND S.aid = H.appt_id AND H.doctor_id = D.doctor_id
-GROUP BY D.doctor_ID, D.name, D.speccialty;
+GROUP BY D.doctor_ID, D.name, D.specialty;
