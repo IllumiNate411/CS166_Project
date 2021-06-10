@@ -312,7 +312,7 @@ public class DBproject{
 			String dept = in.readLine();
 
 			String query = "INSERT INTO Doctor SELECT " + id
-				+ ", '" + name + "', ''" +  spec + "', " + dept
+				+ ", '" + name + "', '" +  spec + "', " + dept
 				+ "WHERE NOT EXISTS(SELECT * FROM Doctor WHERE doctor_ID = "
 				+ id + ");";
 
