@@ -303,7 +303,7 @@ public class DBproject{
 		try{
 			maxid = esql.getCurrSeqVal("SELECT MAX(doctor_ID) FROM Doctor");
 			if(maxid.next()){
-				newid = maxid.getInt(1) + 1;
+				newid = maxid + 1;
 			}
 			System.out.print("\tEnter the doctor's name: $");
 			String name = in.readLine();
@@ -332,7 +332,7 @@ public class DBproject{
 		try{
 			maxid = esql.getCurrSeqVal("SELECT MAX(patient_ID) FROM Patient");
 			if(maxid.next()){
-				newid = maxid.getInt(1) + 1;
+				newid = maxid + 1;
 			}
 
 			System.out.print("\tEnter the patient's name: $");
@@ -368,7 +368,7 @@ public class DBproject{
 		try{
 			maxid = esql.getCurrSeqVal("SELECT MAX(appnt_ID) FROM Appointment");
 			if(maxid.next()){
-				newid = maxid.getInt(1) + 1;
+				newid = maxid + 1;
 			}
 
 			System.out.print("\tEnter the appointment's date (YYYY-MM-DD): $");
