@@ -298,7 +298,7 @@ public class DBproject{
 	}//end readChoice
 
 	public static void AddDoctor(DBproject esql) {//1
-		ResultSet maxid;
+		int maxid;
 		int newid;
 		try{
 			maxid = esql.getCurrSeqVal("SELECT MAX(doctor_ID) FROM Doctor");
@@ -327,7 +327,7 @@ public class DBproject{
 	}
 
 	public static void AddPatient(DBproject esql) {//2
-		ResultSet maxid;
+		int maxid;
 		int newid;
 		try{
 			maxid = esql.getCurrSeqVal("SELECT MAX(patient_ID) FROM Patient");
@@ -363,7 +363,7 @@ public class DBproject{
 	}
 
 	public static void AddAppointment(DBproject esql) {//3
-		ResultSet maxid;
+		int maxid;
 		int newid;
 		try{
 			maxid = esql.getCurrSeqVal("SELECT MAX(appnt_ID) FROM Appointment");
@@ -382,7 +382,7 @@ public class DBproject{
 
 			String query = "INSERT INTO Doctor SELECT "
 				+ newid + ", '" + date + "', '" + slot + "', ''" + status
-				+ id + ", '" + date + "', '" + slot + "', ''" + status
+				+ ", '" + date + "', '" + slot + "', ''" + status
 				+ "' WHERE NOT EXISTS(SELECT * FROM Appointment WHERE appointment_ID = "
 				+ newid + ");";
 
@@ -476,7 +476,7 @@ public class DBproject{
 			String status = in.readLine();
 
 			String query = "SELECT D.doctor_ID, D.name, D.specialty, count(S.pid) AS C"
-			+ " FROM Doctor D, Searches S, has_appointment H, Appointment A" + " WHERE A.status = " 
+			+ " FROM Doctor D, Searches S, has_appointment H, Appointment A" + " WHERE A.status = "
 			+ status + " AND A.appnt_ID = S.aid AND S.aid = H.appt_id AND H.doctor_id = D.doctor_id"
 			+ " GROUP BY D.doctor_ID, D.name, D.specialty"
 			+ " ORDER BY C Desc;";
