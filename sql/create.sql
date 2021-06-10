@@ -136,7 +136,7 @@ COPY Patient (
 	address ,
 	number_of_appts
 )
-FROM 'patient.csv'
+FROM '/home/csmajs/nholm002/CS166_Project/data/patient.csv'
 WITH DELIMITER ',';
 
 
@@ -144,7 +144,7 @@ COPY Hospital (
 	hospital_ID,
 	name
 )
-FROM 'hospital.csv'
+FROM '/home/csmajs/nholm002/CS166_Project/data/hospital.csv'
 WITH DELIMITER ',';
 
 
@@ -153,7 +153,7 @@ COPY Department (
 	name,
 	hid
 )
-FROM 'department.csv'
+FROM '/home/csmajs/nholm002/CS166_Project/data/department.csv'
 WITH DELIMITER ',';
 
 
@@ -162,7 +162,7 @@ COPY Staff (
 	name,
 	hid
 )
-FROM 'staff.csv'
+FROM '/home/csmajs/nholm002/CS166_Project/data/staff.csv'
 WITH DELIMITER ',';
 
 
@@ -172,7 +172,7 @@ COPY Doctor (
 	specialty,
 	did
 )
-FROM 'doctor.csv'
+FROM '/home/csmajs/nholm002/CS166_Project/data/doctor.csv'
 WITH DELIMITER ',';
 
 
@@ -182,7 +182,7 @@ COPY Appointment (
 	time_slot,
 	status
 )
-FROM 'appointment.csv'
+FROM '/home/csmajs/nholm002/CS166_Project/data/appointment.csv'
 WITH DELIMITER ',';
 
 
@@ -193,7 +193,7 @@ COPY request_maintenance (
 	did,
 	sid
 )
-FROM 'request_maintenance.csv'
+FROM '/home/csmajs/nholm002/CS166_Project/data/request_maintenance.csv'
 WITH DELIMITER ',';
 
 
@@ -202,7 +202,7 @@ COPY searches (
 	pid,
 	aid
 )
-FROM 'searches.csv'
+FROM '/home/csmajs/nholm002/CS166_Project/data/searches.csv'
 WITH DELIMITER ',';
 
 
@@ -210,7 +210,7 @@ COPY schedules (
 	appt_id,
 	staff_id
 )
-FROM 'schedules.csv'
+FROM '/home/csmajs/nholm002/CS166_Project/data/schedules.csv'
 WITH DELIMITER ',';
 
 
@@ -218,6 +218,6 @@ COPY has_appointment (
 	appt_id,
 	doctor_id
 )
-FROM 'has_appointment.csv'
+FROM '/home/csmajs/nholm002/CS166_Project/data/has_appointment.csv'
 WITH DELIMITER ',';
 

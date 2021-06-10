@@ -1,6 +1,6 @@
 --1--
 INSERT INTO Doctor
-SELECT 9999, 'Some Doctor', 'Some Specialty'
+SELECT 9999, 'Some Doctor', 'Some Specialty', 42
 WHERE NOT EXISTS
 (
   SELECT *
@@ -56,7 +56,7 @@ SELECT D.doctor_ID, D.name, D.specialty, A.status, count(A.status) AS C
 FROM Doctor D, Appointment A, has_appointment H
 WHERE A.appnt_ID = H.appt_ID AND H.doctor_ID = D.doctor_ID
 GROUP BY D.doctor_ID, D.name, D.specialty, A.status
-ORDER BY Desc C, doctor_ID;
+ORDER BY C Desc;
 
 --8--
 SELECT D.doctor_ID, D.name, D.specialty, count(S.pid)
