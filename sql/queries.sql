@@ -34,21 +34,21 @@ WHERE NOT EXISTS
 --5--
 SELECT A.appnt_ID, A.adate, A.time_slot, A.status
 FROM Appointment A
-WHERE A.adate <= '2021-01-01' AND A.adate >= '2021-01-01' AND A.appnt_ID IN
+WHERE A.adate >= '2021-01-01' AND A.adate <= '2021-12-01' AND A.appnt_ID IN
 (
-  SELECT A.appnt_ID
-  FROM Appointment A, has_appointment H
-  WHERE H.doctor_ID = 9999 AND H.appt_ID = A.appnt_ID
+  SELECT P.appnt_ID
+  FROM Appointment P, has_appointment H
+  WHERE H.doctor_ID = 2 AND H.appt_ID = P.appnt_ID
 );
 
 --6--
 SELECT A.appnt_ID, A.time_slot, A.status
 FROM Appointment A, searches S
-WHERE A.adate = '2021-01-01' AND A.appnt_ID = S.aid AND S.hid IN
+WHERE A.adate = '2020-07-10' AND A.appnt_ID = S.aid AND S.hid IN
 (
   SELECT S.hid
   FROM Hospital H, searches S
-  WHERE H.name = 'Some Hospital' AND H.hospital_ID = S.hid
+  WHERE H.name = 'UCLA Medical Center' AND H.hospital_ID = S.hid
 );
 
 --7--
@@ -59,7 +59,8 @@ GROUP BY D.doctor_ID, D.name, D.specialty, A.status
 ORDER BY C Desc;
 
 --8--
-SELECT D.doctor_ID, D.name, D.specialty, count(S.pid)
+SELECT D.doctor_ID, D.name, D.specialty, count(S.pid) AS C
 FROM Doctor D, Searches S, has_appointment H, Appointment A
 WHERE A.status = 'PA' AND A.appnt_ID = S.aid AND S.aid = H.appt_id AND H.doctor_id = D.doctor_id
-GROUP BY D.doctor_ID, D.name, D.specialty;
+GROUP BY D.doctor_ID, D.name, D.specialty
+ORDER BY C Desc;
