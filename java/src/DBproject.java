@@ -311,8 +311,8 @@ public class DBproject{
 			System.out.print("\tEnter the doctor's department ID: $");
 			String dept = in.readLine();
 
-			String query = "INSERT INTO Doctor SELECT " + id
-				+ ", '" + name + "', ''" +  spec + "', " + dept
+			String query = "INSERT INTO Doctor SELECT "
+				+ id + ", '" + name + "', '" + spec + "', " + dept
 				+ "WHERE NOT EXISTS(SELECT * FROM Doctor WHERE doctor_ID = "
 				+ id + ");";
 
@@ -324,9 +324,61 @@ public class DBproject{
 	}
 
 	public static void AddPatient(DBproject esql) {//2
+		try{
+			System.out.print("\tEnter the patient's ID: $");
+			String id = in.readLine();
+
+			System.out.print("\tEnter the patient's name: $");
+			String name = in.readLine();
+
+			System.out.print("\tEnter the patient's birth gender: $");
+			String gender = in.readLine();
+
+			System.out.print("\tEnter the patient's age: $");
+			String age = in.readLine();
+
+			System.out.print("\tEnter the patient's address: $");
+			String address = in.readLine();
+
+			System.out.print("\tEnter the number of patient's appointments: $");
+			String appts = in.readLine();
+
+			String query = "INSERT INTO Patient SELECT " + id + ", '" + name + "', '"
+				+ gender + "', " + age + ", '" + address + "', " + appts
+				+ "WHERE NOT EXISTS(SELECT * FROM Patient WHERE patient_ID = "
+				+ id + ");";
+
+			int rowCount = esql.executeQuery(query);
+			System.out.println ("total row(s): " + rowCount);
+		}catch(Exception e){
+			 System.err.println (e.getMessage());
+		}
 	}
 
 	public static void AddAppointment(DBproject esql) {//3
+		try{
+			System.out.print("\tEnter the appointment's ID: $");
+			String id = in.readLine();
+
+			System.out.print("\tEnter the appointment's date (YYYY-MM-DD): $");
+			String date = in.readLine();
+
+			System.out.print("\tEnter the appointment's time slot (H:MM-H:MM): $");
+			String slot = in.readLine();
+
+			System.out.print("\tEnter the appointment's status (PA, AC, AV, WL): $");
+			String status = in.readLine();
+
+			String query = "INSERT INTO Doctor SELECT "
+				+ id + ", '" + date + "', '" + slot + "', ''" + status +
+				+ "' WHERE NOT EXISTS(SELECT * FROM Appointment WHERE appointment_ID = "
+				+ id + ");";
+
+			int rowCount = esql.executeQuery(query);
+			System.out.println ("total row(s): " + rowCount);
+		}catch(Exception e){
+			 System.err.println (e.getMessage());
+		}
 	}
 
 
