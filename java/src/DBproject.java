@@ -298,13 +298,10 @@ public class DBproject{
 	}//end readChoice
 
 	public static void AddDoctor(DBproject esql) {//1
-		int maxid;
 		int newid;
 		try{
-			maxid = esql.getCurrSeqVal("SELECT MAX(doctor_ID) FROM Doctor");
-			if(maxid != null){
-				newid = maxid + 1;
-			}
+			newid = esql.getCurrSeqVal("SELECT MAX(doctor_ID) FROM Doctor") + 1;
+
 			System.out.print("\tEnter the doctor's name: $");
 			String name = in.readLine();
 
@@ -327,13 +324,9 @@ public class DBproject{
 	}
 
 	public static void AddPatient(DBproject esql) {//2
-		int maxid;
 		int newid;
 		try{
-			maxid = esql.getCurrSeqVal("SELECT MAX(patient_ID) FROM Patient");
-			if(maxid != null){
-				newid = maxid + 1;
-			}
+			newid = esql.getCurrSeqVal("SELECT MAX(patient_ID) FROM Patient") + 1;
 
 			System.out.print("\tEnter the patient's name: $");
 			String name = in.readLine();
@@ -363,13 +356,9 @@ public class DBproject{
 	}
 
 	public static void AddAppointment(DBproject esql) {//3
-		int maxid;
 		int newid;
 		try{
-			maxid = esql.getCurrSeqVal("SELECT MAX(appnt_ID) FROM Appointment");
-			if(maxid != null){
-				newid = maxid + 1;
-			}
+			newid = esql.getCurrSeqVal("SELECT MAX(appnt_ID) FROM Appointment") + 1;
 
 			System.out.print("\tEnter the appointment's date (YYYY-MM-DD): $");
 			String date = in.readLine();
