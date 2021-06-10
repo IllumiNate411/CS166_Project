@@ -370,7 +370,7 @@ public class DBproject{
 			String status = in.readLine();
 
 			String query = "INSERT INTO Doctor SELECT "
-				+ id + ", '" + date + "', '" + slot + "', ''" + status +
+				+ id + ", '" + date + "', '" + slot + "', ''" + status
 				+ "' WHERE NOT EXISTS(SELECT * FROM Appointment WHERE appointment_ID = "
 				+ id + ");";
 
