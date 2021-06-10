@@ -327,6 +327,7 @@ public class DBproject{
 		int newid;
 		try{
 			newid = esql.getCurrSeqVal("SELECT MAX(patient_ID) FROM Patient") + 1;
+			System.out.print(newid);
 
 			System.out.print("\tEnter the patient's name: $");
 			String name = in.readLine();
@@ -466,7 +467,7 @@ public class DBproject{
 
 			String query = "SELECT D.doctor_ID, D.name, D.specialty, count(S.pid) AS C"
 			+ " FROM Doctor D, Searches S, has_appointment H, Appointment A" + " WHERE A.status = "
-			+ status.toUpperCase() + " AND A.appnt_ID = S.aid AND S.aid = H.appt_id AND H.doctor_id = D.doctor_id"
+			+ status + " AND A.appnt_ID = S.aid AND S.aid = H.appt_id AND H.doctor_id = D.doctor_id"
 			+ " GROUP BY D.doctor_ID, D.name, D.specialty"
 			+ " ORDER BY C Desc;";
 
