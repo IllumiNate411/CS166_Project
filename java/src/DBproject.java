@@ -403,7 +403,7 @@ public class DBproject{
 			String pname = in.readLine();
 			System.out.print("\tEnter patient's gender: ");
 			String pgender = in.readLine();
-				
+
 		}catch(Exception e){
 			System.err.println(e.getMessage());
 		}
@@ -472,9 +472,12 @@ public class DBproject{
 	public static void FindPatientsCountWithStatus(DBproject esql) {//8
 		// Find how many patients per doctor there are with a given status (i.e. PA, AC, AV, WL) and list that number per doctor.
 		try{
+			System.out.print("\tEnter an appointment status: $");
+			String status = in.readLine();
+
 			String query = "SELECT D.doctor_ID, D.name, D.specialty, count(S.pid) AS C"
-			+ " FROM Doctor D, Searches S, has_appointment H, Appointment A"
-			+ " WHERE A.status = 'PA' AND A.appnt_ID = S.aid AND S.aid = H.appt_id AND H.doctor_id = D.doctor_id"
+			+ " FROM Doctor D, Searches S, has_appointment H, Appointment A" + " WHERE A.status = " 
+			+ status + " AND A.appnt_ID = S.aid AND S.aid = H.appt_id AND H.doctor_id = D.doctor_id"
 			+ " GROUP BY D.doctor_ID, D.name, D.specialty"
 			+ " ORDER BY C Desc;";
 
