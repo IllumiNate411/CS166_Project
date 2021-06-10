@@ -298,10 +298,13 @@ public class DBproject{
 	}//end readChoice
 
 	public static void AddDoctor(DBproject esql) {//1
+		ResultSet maxid;
+		int newid;
 		try{
-			System.out.print("\tEnter the doctor's ID: $");
-			String id = in.readLine();
-
+			maxid = esql.getCurrSeqVal("SELECT MAX(doctor_ID) FROM Doctor");
+			if(maxid.next()){
+				newid = maxid.getInt(1) + 1;
+			}
 			System.out.print("\tEnter the doctor's name: $");
 			String name = in.readLine();
 
@@ -312,9 +315,9 @@ public class DBproject{
 			String dept = in.readLine();
 
 			String query = "INSERT INTO Doctor SELECT "
-				+ id + ", '" + name + "', '" + spec + "', " + dept
+				+ newid + ", '" + name + "', '" + spec + "', " + dept
 				+ "WHERE NOT EXISTS(SELECT * FROM Doctor WHERE doctor_ID = "
-				+ id + ");";
+				+ newid + ");";
 
 			int rowCount = esql.executeQuery(query);
 			System.out.println ("total row(s): " + rowCount);
@@ -324,9 +327,13 @@ public class DBproject{
 	}
 
 	public static void AddPatient(DBproject esql) {//2
+		ResultSet maxid;
+		int newid;
 		try{
-			System.out.print("\tEnter the patient's ID: $");
-			String id = in.readLine();
+			maxid = esql.getCurrSeqVal("SELECT MAX(patient_ID) FROM Patient");
+			if(maxid.next()){
+				newid = maxid.getInt(1) + 1;
+			}
 
 			System.out.print("\tEnter the patient's name: $");
 			String name = in.readLine();
@@ -343,10 +350,10 @@ public class DBproject{
 			System.out.print("\tEnter the number of patient's appointments: $");
 			String appts = in.readLine();
 
-			String query = "INSERT INTO Patient SELECT " + id + ", '" + name + "', '"
+			String query = "INSERT INTO Patient SELECT " + newid + ", '" + name + "', '"
 				+ gender + "', " + age + ", '" + address + "', " + appts
 				+ "WHERE NOT EXISTS(SELECT * FROM Patient WHERE patient_ID = "
-				+ id + ");";
+				+ newid + ");";
 
 			int rowCount = esql.executeQuery(query);
 			System.out.println ("total row(s): " + rowCount);
@@ -356,9 +363,13 @@ public class DBproject{
 	}
 
 	public static void AddAppointment(DBproject esql) {//3
+		ResultSet maxid;
+		int newid;
 		try{
-			System.out.print("\tEnter the appointment's ID: $");
-			String id = in.readLine();
+			maxid = esql.getCurrSeqVal("SELECT MAX(appnt_ID) FROM Appointment");
+			if(maxid.next()){
+				newid = maxid.getInt(1) + 1;
+			}
 
 			System.out.print("\tEnter the appointment's date (YYYY-MM-DD): $");
 			String date = in.readLine();
@@ -370,9 +381,9 @@ public class DBproject{
 			String status = in.readLine();
 
 			String query = "INSERT INTO Doctor SELECT "
-				+ id + ", '" + date + "', '" + slot + "', ''" + status +
+				+ newid + ", '" + date + "', '" + slot + "', ''" + status
 				+ "' WHERE NOT EXISTS(SELECT * FROM Appointment WHERE appointment_ID = "
-				+ id + ");";
+				+ newid + ");";
 
 			int rowCount = esql.executeQuery(query);
 			System.out.println ("total row(s): " + rowCount);
@@ -384,6 +395,17 @@ public class DBproject{
 
 	public static void MakeAppointment(DBproject esql) {//4
 		// Given a patient, a doctor and an appointment of the doctor that s/he wants to take, add an appointment to the DB
+		try{
+			System.out.print("\tEnter patient ID: ");
+			String pid = in.readLine();
+			System.out.print("\tEnter patient name: ");
+			String pname = in.readLine();
+			System.out.print("\tEnter patient's gender: ");
+			String pgender = in.readLine();
+				
+		}catch(Exception e){
+			System.err.println(e.getMessage());
+		}
 	}
 
 	public static void ListAppointmentsOfDoctor(DBproject esql) {//5
@@ -402,7 +424,7 @@ public class DBproject{
 			+ date1 + "' AND A.adate <= '" + date2 + "' AND A.appnt_ID IN (SELECT P.appnt_ID FROM Appointment P, has_appointment H WHERE H.doctor_ID = "
 			+ id + " AND H.appt_ID = P.appnt_ID);";
 
-			int rowCount = esql.executeQuery(query);
+			int rowCount = esql.executeQueryAndPrintResult(query);
 			System.out.println ("total row(s): " + rowCount);
 		}catch(Exception e){
 			System.err.println (e.getMessage());
@@ -422,7 +444,7 @@ public class DBproject{
 				+ date +  " AND A.appnt_ID = S.aid AND S.hid IN (SELECT S.hid FROM Hospital H, searches S WHERE H.name = "
 				+ dept + " AND H.hospital_ID = S.hid);";
 
-			int rowCount = esql.executeQuery(query);
+			int rowCount = esql.executeQueryAndPrintResult(query);
 			System.out.println ("total row(s): " + rowCount);
 		}catch(Exception e){
 			System.err.println (e.getMessage());
@@ -438,7 +460,7 @@ public class DBproject{
 			+ " GROUP BY D.doctor_ID, D.name, D.specialty, A.status"
 			+ " ORDER BY C Desc;";
 
-			int rowCount = esql.executeQuery(query);
+			int rowCount = esql.executeQueryAndPrintResult(query);
 			System.out.println ("total row(s): " + rowCount);
 		}catch(Exception e){
 			System.err.println (e.getMessage());
@@ -455,7 +477,7 @@ public class DBproject{
 			+ " GROUP BY D.doctor_ID, D.name, D.specialty"
 			+ " ORDER BY C Desc;";
 
-			int rowCount = esql.executeQuery(query);
+			int rowCount = esql.executeQueryAndPrintResult(query);
 			System.out.println ("total row(s): " + rowCount);
 		}catch(Exception e){
 			System.err.println (e.getMessage());
