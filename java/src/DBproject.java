@@ -400,7 +400,7 @@ public class DBproject{
 
 			String query = "SELECT A.appnt_ID, A.adate, A.time_slot, A.status FROM Appointment A WHERE A.adate >= '"
 			+ date1 + "' AND A.adate <= '" + date2 + "' AND A.appnt_ID IN (SELECT P.appnt_ID FROM Appointment P, has_appointment H WHERE H.doctor_ID = "
-			+ id + " AND H.appt_ID = P.appnt_ID);"
+			+ id + " AND H.appt_ID = P.appnt_ID);";
 
 			int rowCount = esql.executeQuery(query);
 			System.out.println ("total row(s): " + rowCount);
@@ -411,14 +411,54 @@ public class DBproject{
 
 	public static void ListAvailableAppointmentsOfDepartment(DBproject esql) {//6
 		// For a department name and a specific date, find the list of available appointments of the department
+		try{
+			System.out.print("\tEnter the name of a department: $");
+			String dept = in.readLine();
+
+			System.out.print("\tEnter a date (YYYY-MM-DD): $");
+			String date = in.readLine();
+
+			String query = "SELECT A.appnt_ID, A.time_slot, A.status FROM Appointment A, searches S WHERE A.adate = "
+				+ date +  " AND A.appnt_ID = S.aid AND S.hid IN (SELECT S.hid FROM Hospital H, searches S WHERE H.name = "
+				+ dept + " AND H.hospital_ID = S.hid);";
+
+			int rowCount = esql.executeQuery(query);
+			System.out.println ("total row(s): " + rowCount);
+		}catch(Exception e){
+			System.err.println (e.getMessage());
+		}
 	}
 
 	public static void ListStatusNumberOfAppointmentsPerDoctor(DBproject esql) {//7
 		// Count number of different types of appointments per doctors and list them in descending order
+		try{
+			String query = "SELECT D.doctor_ID, D.name, D.specialty, A.status, count(A.status) AS C"
+			+ " FROM Doctor D, Appointment A, has_appointment H"
+			+ " WHERE A.appnt_ID = H.appt_ID AND H.doctor_ID = D.doctor_ID"
+			+ " GROUP BY D.doctor_ID, D.name, D.specialty, A.status"
+			+ " ORDER BY C Desc;";
+
+			int rowCount = esql.executeQuery(query);
+			System.out.println ("total row(s): " + rowCount);
+		}catch(Exception e){
+			System.err.println (e.getMessage());
+		}
 	}
 
 
 	public static void FindPatientsCountWithStatus(DBproject esql) {//8
 		// Find how many patients per doctor there are with a given status (i.e. PA, AC, AV, WL) and list that number per doctor.
+		try{
+			String query = "SELECT D.doctor_ID, D.name, D.specialty, count(S.pid) AS C"
+			+ " FROM Doctor D, Searches S, has_appointment H, Appointment A"
+			+ " WHERE A.status = 'PA' AND A.appnt_ID = S.aid AND S.aid = H.appt_id AND H.doctor_id = D.doctor_id"
+			+ " GROUP BY D.doctor_ID, D.name, D.specialty"
+			+ " ORDER BY C Desc;";
+
+			int rowCount = esql.executeQuery(query);
+			System.out.println ("total row(s): " + rowCount);
+		}catch(Exception e){
+			System.err.println (e.getMessage());
+		}
 	}
 }
