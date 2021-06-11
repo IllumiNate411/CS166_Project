@@ -300,7 +300,7 @@ public class DBproject{
 	public static void AddDoctor(DBproject esql) {//1
 		int newid;
 		try{
-			newid = esql.getCurrSeqVal("SELECT MAX(doctor_ID) FROM Doctor") + 1;
+			newid = esql.executeQuery("SELECT doctor_ID FROM Doctor");
 
 			System.out.print("\tEnter the doctor's name: $");
 			String name = in.readLine();
@@ -316,8 +316,7 @@ public class DBproject{
 				+ "WHERE NOT EXISTS(SELECT * FROM Doctor WHERE doctor_ID = "
 				+ newid + ");";
 
-			int rowCount = esql.executeQuery(query);
-			System.out.println ("total row(s): " + rowCount);
+			esql.executeUpdate(query);
 		}catch(Exception e){
 			 System.err.println (e.getMessage());
 		}
@@ -326,8 +325,7 @@ public class DBproject{
 	public static void AddPatient(DBproject esql) {//2
 		int newid;
 		try{
-			newid = esql.getCurrSeqVal("SELECT MAX(patient_ID) FROM Patient") + 1;
-			System.out.print(newid);
+			newid = esql.executeQuery("SELECT patient_ID FROM Patient");
 
 			System.out.print("\tEnter the patient's name: $");
 			String name = in.readLine();
@@ -349,8 +347,7 @@ public class DBproject{
 				+ "WHERE NOT EXISTS(SELECT * FROM Patient WHERE patient_ID = "
 				+ newid + ");";
 
-			int rowCount = esql.executeQuery(query);
-			System.out.println ("total row(s): " + rowCount);
+			esql.executeUpdate(query);
 		}catch(Exception e){
 			 System.err.println (e.getMessage());
 		}
@@ -359,7 +356,7 @@ public class DBproject{
 	public static void AddAppointment(DBproject esql) {//3
 		int newid;
 		try{
-			newid = esql.getCurrSeqVal("SELECT MAX(appnt_ID) FROM Appointment") + 1;
+			newid = esql.executeQuery("SELECT appnt_ID FROM Appointment");
 
 			System.out.print("\tEnter the appointment's date (YYYY-MM-DD): $");
 			String date = in.readLine();
@@ -370,14 +367,12 @@ public class DBproject{
 			System.out.print("\tEnter the appointment's status (PA, AC, AV, WL): $");
 			String status = in.readLine();
 
-			String query = "INSERT INTO Doctor SELECT "
-				+ newid + ", '" + date + "', '" + slot + "', ''" + status
-				+ ", '" + date + "', '" + slot + "', ''" + status
-				+ "' WHERE NOT EXISTS(SELECT * FROM Appointment WHERE appointment_ID = "
+			String query = "INSERT INTO Appointment SELECT "
+				+ newid + ", '" + date + "', '" + slot + "', '" + status
+				+ "' WHERE NOT EXISTS(SELECT * FROM Appointment WHERE appnt_ID = "
 				+ newid + ");";
 
-			int rowCount = esql.executeQuery(query);
-			System.out.println ("total row(s): " + rowCount);
+			esql.executeUpdate(query);
 		}catch(Exception e){
 			 System.err.println (e.getMessage());
 		}
