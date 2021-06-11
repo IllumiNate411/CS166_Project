@@ -339,11 +339,8 @@ public class DBproject{
 			System.out.print("\tEnter the patient's address: $");
 			String address = in.readLine();
 
-			System.out.print("\tEnter the number of patient's appointments: $");
-			String appts = in.readLine();
-
 			String query = "INSERT INTO Patient SELECT " + newid + ", '" + name + "', '"
-				+ gender + "', " + age + ", '" + address + "', " + appts
+				+ gender + "', " + age + ", '" + address + "', 0 " + 
 				+ "WHERE NOT EXISTS(SELECT * FROM Patient WHERE patient_ID = "
 				+ newid + ");";
 
