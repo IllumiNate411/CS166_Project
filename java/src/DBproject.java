@@ -340,7 +340,7 @@ public class DBproject{
 			String address = in.readLine();
 
 			String query = "INSERT INTO Patient SELECT " + newid + ", '" + name + "', '"
-				+ gender + "', " + age + ", '" + address + "', 0 " + 
+				+ gender + "', " + age + ", '" + address + "', 0 " 
 				+ "WHERE NOT EXISTS(SELECT * FROM Patient WHERE patient_ID = "
 				+ newid + ");";
 
@@ -379,13 +379,90 @@ public class DBproject{
 	public static void MakeAppointment(DBproject esql) {//4
 		// Given a patient, a doctor and an appointment of the doctor that s/he wants to take, add an appointment to the DB
 		try{
-			System.out.print("\tEnter patient ID: ");
-			String pid = in.readLine();
-			System.out.print("\tEnter patient name: ");
-			String pname = in.readLine();
-			System.out.print("\tEnter patient's gender: ");
-			String pgender = in.readLine();
+			System.out.print("\tEnter patient ID: $");
+			int patientIdCheck = Integer.parseInt(in.readLine());
+			String idCheck = "SELECT id FROM Patient WHERE id = " + patientIdCheck + ";";
+			if(esql.executeQueryAndPrintResult(idCheck) == 0){ //patient id not found
+				while(true){
+					System.out.print("\tPatient ID not found. Please input patient details: ");
+					try{
+					int newid = esql.executeQuery("SELECT patient_ID FROM Patient");
 
+					System.out.print("\tEnter the patient's name: $");
+					String name = in.readLine();
+
+					System.out.print("\tEnter the patient's birth gender: $");
+					String gender = in.readLine();
+
+					System.out.print("\tEnter the patient's age: $");
+					String age = in.readLine();
+
+					System.out.print("\tEnter the patient's address: $");
+					String address = in.readLine();
+
+					String query = "INSERT INTO Patient SELECT " + newid + ", '" + name + "', '"
+						+ gender + "', " + age + ", '" + address + "', 0 "
+						+ "WHERE NOT EXISTS(SELECT * FROM Patient WHERE patient_ID = "
+						+ newid + ");";
+
+					esql.executeUpdate(query);
+					break;
+					} catch (Exception e){
+						System.err.println(e.getMessage());
+					}
+				}
+			} //end inserting new patient 
+			while(true){ //check doctor id and appointments
+				try{
+					System.out.print("\tPlease input your doctor's ID: $");
+					String doc_id = in.readLine();
+					idCheck = "SELECT doctor_ID FROM Doctor WHERE doctor_ID = " + doc_id + ";";
+					if(esql.executeQueryAndPrintResult(idCheck) == 0){
+						throw new RuntimeException("Invalid Doctor ID. Doctor not found in Database.\n");
+					} else {
+						System.out.print("Please input the earliest date (YYYY-MM-DD): $");
+						String date1 = in.readLine();
+
+						System.out.print("\tInput the latest date (YYYY-MM-DD): $");
+						String date2 = in.readLine();
+						
+						//Changed query to where it should show only AVAILABLE appointments
+						//rather than available & active
+						String query = "SELECT A.appnt_ID, A.adate, A.time_slot, A.status FROM Appointment A WHERE A.adate >= '"
+						+ date1 + "' AND A.adate <= '" + date2 + "' AND A.appnt_ID IN (SELECT P.appnt_ID FROM Appointment P, has_appointment H WHERE P.status = 'AV' AND H.doctor_ID = "
+						+ doc_id + " AND H.appt_ID = P.appnt_ID);";
+
+						int rowCount = esql.executeQueryAndPrintResult(query);
+						System.out.print("\tThe list of available appointments is shown here: " + rowCount) ;
+					}
+					break;
+				} catch (Exception e){
+					System.err.println(e.getMessage());
+					continue;
+				}
+			}
+			
+			try{ //Patient inserting requested appointment slot
+				int newid = esql.executeQuery("SELECT appnt_ID FROM Appointment");
+	
+				System.out.print("\tTo make a new appointment please enter your requested date (YYYY-MM-DD): $");
+				String date = in.readLine();
+	
+				System.out.print("\tEnter the appointment's time slot (H:MM-H:MM): $");
+				String slot = in.readLine();
+	
+				// System.out.print("\tEnter the appointment's status (AC, AV): $");
+				// String status = in.readLine();
+	
+				String query = "INSERT INTO Appointment SELECT "
+					+ newid + ", '" + date + "', '" + slot + "', 'AC'"
+					+ " WHERE NOT EXISTS(SELECT * FROM Appointment WHERE appnt_ID = "
+					+ newid + ");";
+	
+				esql.executeUpdate(query);
+			}catch(Exception e){
+				 System.err.println (e.getMessage());
+			}
 		}catch(Exception e){
 			System.err.println(e.getMessage());
 		}
