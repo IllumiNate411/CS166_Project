@@ -420,15 +420,15 @@ public class DBproject{
 	public static void ListAvailableAppointmentsOfDepartment(DBproject esql) {//6
 		// For a department name and a specific date, find the list of available appointments of the department
 		try{
-			System.out.print("\tEnter the name of a department: $");
+			System.out.print("\tEnter the name of a department (Capitalization Sensitive): $");
 			String dept = in.readLine();
 
 			System.out.print("\tEnter a date (YYYY-MM-DD): $");
 			String date = in.readLine();
 
-			String query = "SELECT A.appnt_ID, A.time_slot, A.status FROM Appointment A, searches S WHERE A.adate = "
-				+ date +  " AND A.appnt_ID = S.aid AND S.hid IN (SELECT S.hid FROM Hospital H, searches S WHERE H.name = "
-				+ dept + " AND H.hospital_ID = S.hid);";
+			String query = "SELECT A.appnt_ID, A.time_slot, A.status FROM Appointment A, has_appointment H WHERE A.adate = '"
+				+ date +  "' AND A.appnt_ID = H.appt_id AND H.doctor_id IN (SELECT H.doctor_id FROM Doctor D, has_appointment H, Department E WHERE E.name = '"
+				+ dept + "' AND E.dept_ID = D.did AND D.doctor_ID = H.doctor_id);";
 
 			int rowCount = esql.executeQueryAndPrintResult(query);
 			System.out.println ("total row(s): " + rowCount);
@@ -457,12 +457,14 @@ public class DBproject{
 	public static void FindPatientsCountWithStatus(DBproject esql) {//8
 		// Find how many patients per doctor there are with a given status (i.e. PA, AC, AV, WL) and list that number per doctor.
 		try{
-			System.out.print("\tEnter an appointment status: $");
+			System.out.print("\tEnter an appointment status (PA, AC, AV, WL): $");
 			String status = in.readLine();
 
+			System.out.print(status);
+
 			String query = "SELECT D.doctor_ID, D.name, D.specialty, count(S.pid) AS C"
-			+ " FROM Doctor D, Searches S, has_appointment H, Appointment A" + " WHERE A.status = "
-			+ status + " AND A.appnt_ID = S.aid AND S.aid = H.appt_id AND H.doctor_id = D.doctor_id"
+			+ " FROM Doctor D, Searches S, has_appointment H, Appointment A WHERE A.status = '"
+			+ status.toUpperCase() +  "' AND A.appnt_ID = S.aid AND S.aid = H.appt_id AND H.doctor_id = D.doctor_id"
 			+ " GROUP BY D.doctor_ID, D.name, D.specialty"
 			+ " ORDER BY C Desc;";
 
