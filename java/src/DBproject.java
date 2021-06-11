@@ -500,7 +500,7 @@ public class DBproject{
 			System.out.print("\tEnter a date (YYYY-MM-DD): $");
 			String date = in.readLine();
 
-			String query = "SELECT A.appnt_ID, A.time_slot, A.status FROM Appointment A, has_appointment H WHERE A.adate = '"
+			String query = "SELECT A.appnt_ID, A.time_slot FROM Appointment A, has_appointment H WHERE A.status = 'AV' AND A.adate = '"
 				+ date +  "' AND A.appnt_ID = H.appt_id AND H.doctor_id IN (SELECT H.doctor_id FROM Doctor D, has_appointment H, Department E WHERE E.name = '"
 				+ dept + "' AND E.dept_ID = D.did AND D.doctor_ID = H.doctor_id);";
 
