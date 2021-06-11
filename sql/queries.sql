@@ -43,12 +43,12 @@ WHERE A.adate >= '2021-01-01' AND A.adate <= '2021-12-01' AND A.appnt_ID IN
 
 --6--
 SELECT A.appnt_ID, A.time_slot, A.status
-FROM Appointment A, searches S
-WHERE A.adate = '2020-07-10' AND A.appnt_ID = S.aid AND S.hid IN
+FROM Appointment A, has_appointment H
+WHERE A.adate = '2021-04-23' AND A.appnt_ID = H.appt_id AND H.doctor_id IN
 (
-  SELECT S.hid
-  FROM Hospital H, searches S
-  WHERE H.name = 'UCLA Medical Center' AND H.hospital_ID = S.hid
+  SELECT H.doctor_id
+  FROM Doctor D, has_appointment H, Department E
+  WHERE E.name = 'Pediatric' AND E.dept_ID = D.did AND D.doctor_ID = H.doctor_id
 );
 
 --7--
