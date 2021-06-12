@@ -298,8 +298,6 @@ public class DBproject{
 	}//end readChoice
 	
 	public static int getStatus(List<List<String> > status) {
-
-                System.out.print(status.get(0).get(0) + "\n");
                 if (status.get(0).get(0).equals("PA")) {
                         return 1;
                 }
