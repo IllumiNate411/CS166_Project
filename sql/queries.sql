@@ -42,13 +42,13 @@ WHERE A.adate >= '2021-01-01' AND A.adate <= '2021-12-01' AND A.appnt_ID IN
 );
 
 --6--
-SELECT A.appnt_ID, A.time_slot, A.status
+SELECT A.appnt_ID, A.time_slot
 FROM Appointment A, has_appointment H
-WHERE A.adate = '2021-04-23' AND A.appnt_ID = H.appt_id AND H.doctor_id IN
+WHERE A.status = 'AV' AND A.adate = '2021-08-16' AND A.appnt_ID = H.appt_id AND H.doctor_id IN
 (
   SELECT H.doctor_id
   FROM Doctor D, has_appointment H, Department E
-  WHERE E.name = 'Pediatric' AND E.dept_ID = D.did AND D.doctor_ID = H.doctor_id
+  WHERE E.name = 'Dermatology' AND E.dept_ID = D.did AND D.doctor_ID = H.doctor_id
 );
 
 --7--
