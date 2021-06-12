@@ -392,6 +392,7 @@ public class DBproject{
 		// Given a patient, a doctor and an appointment of the doctor that s/he wants to take, add an appointment to the DB
 		try{
 			boolean newpatient = false;
+			int patid = 0;
 			System.out.print("\tEnter patient ID: $");
 			String patientIdCheck = in.readLine();
 			String idCheck = "SELECT patient_id FROM Patient WHERE patient_id = " + patientIdCheck + ";";
@@ -400,7 +401,7 @@ public class DBproject{
 				while(true){
 					System.out.print("\tPatient ID not found. Please input patient details: ");
 					try{
-					int patid = (esql.executeQueryAndReturnResult("SELECT patient_ID FROM Patient")).size();
+					patid = (esql.executeQueryAndReturnResult("SELECT patient_ID FROM Patient")).size();
 
 					System.out.print("\tEnter the patient's name: $");
 					String name = in.readLine();
@@ -459,7 +460,7 @@ public class DBproject{
 			//increment number of patient's appointments by 1
 			//esql.executeUpdate("UPDATE TABLE Patient SET")
 			if (newpatient) {
-				esql.executeUpdate("UPDATE Patient SET number_of_appts = number_of_appts + 1 WHERE patient_id = " + integer.toString(patid) + ";");
+				esql.executeUpdate("UPDATE Patient SET number_of_appts = number_of_appts + 1 WHERE patient_id = " + Integer.toString(patid) + ";");
 			} else {
 				esql.executeUpdate("UPDATE Patient SET number_of_appts = number_of_appts + 1 WHERE patient_id = " + patientIdCheck + ";");
 			}
