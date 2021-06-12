@@ -296,11 +296,29 @@ public class DBproject{
 		}while (true);
 		return input;
 	}//end readChoice
+	
+	public static int getStatus(List<List<String> > status) {
+
+                System.out.print(status.get(0).get(0) + "\n");
+                if (status.get(0).get(0).equals("PA")) {
+                        return 1;
+                }
+
+		if (status.get(0).get(0).equals("AC")) {
+                        return 2;
+                }
+
+		if (status.get(0).get(0).equals("AV")) {
+                        return 3;
+                }
+
+                return 4;
+        }
 
 	public static void AddDoctor(DBproject esql) {//1
 		int newid;
 		try{
-			newid = esql.executeQuery("SELECT doctor_ID FROM Doctor");
+			newid = (esql.executeQueryAndReturnResult("SELECT doctor_id FROM Doctor;")).size();
 
 			System.out.print("\tEnter the doctor's name: $");
 			String name = in.readLine();
@@ -311,10 +329,8 @@ public class DBproject{
 			System.out.print("\tEnter the doctor's department ID: $");
 			String dept = in.readLine();
 
-			String query = "INSERT INTO Doctor SELECT "
-				+ newid + ", '" + name + "', '" + spec + "', " + dept
-				+ "WHERE NOT EXISTS(SELECT * FROM Doctor WHERE doctor_ID = "
-				+ newid + ");";
+			String query = "INSERT INTO Doctor (doctor_id, name, specialty, did) Values ("
+				+ newid + ", '" + name + "', '" + spec + "', " + dept + ");";
 
 			esql.executeUpdate(query);
 		}catch(Exception e){
@@ -325,7 +341,7 @@ public class DBproject{
 	public static void AddPatient(DBproject esql) {//2
 		int newid;
 		try{
-			newid = esql.executeQuery("SELECT patient_ID FROM Patient");
+			newid = (esql.executeQueryAndReturnResult("SELECT patient_ID FROM Patient")).size();
 
 			System.out.print("\tEnter the patient's name: $");
 			String name = in.readLine();
@@ -339,10 +355,8 @@ public class DBproject{
 			System.out.print("\tEnter the patient's address: $");
 			String address = in.readLine();
 
-			String query = "INSERT INTO Patient SELECT " + newid + ", '" + name + "', '"
-				+ gender + "', " + age + ", '" + address + "', 0 " 
-				+ "WHERE NOT EXISTS(SELECT * FROM Patient WHERE patient_ID = "
-				+ newid + ");";
+			String query = "INSERT INTO Patient (patient_id, name, gtype, age, address, number_of_appts) Values( " + newid + ", '" + name + "', '"
+				+ gender.toUpperCase() + "', " + age + ", '" + address + "', 0);";
 
 			esql.executeUpdate(query);
 		}catch(Exception e){
@@ -353,7 +367,7 @@ public class DBproject{
 	public static void AddAppointment(DBproject esql) {//3
 		int newid;
 		try{
-			newid = esql.executeQuery("SELECT appnt_ID FROM Appointment");
+			newid = (esql.executeQueryAndReturnResult("SELECT appnt_ID FROM Appointment")).size();
 
 			System.out.print("\tEnter the appointment's date (YYYY-MM-DD): $");
 			String date = in.readLine();
@@ -364,10 +378,8 @@ public class DBproject{
 			System.out.print("\tEnter the appointment's status (PA, AC, AV, WL): $");
 			String status = in.readLine();
 
-			String query = "INSERT INTO Appointment SELECT "
-				+ newid + ", '" + date + "', '" + slot + "', '" + status
-				+ "' WHERE NOT EXISTS(SELECT * FROM Appointment WHERE appnt_ID = "
-				+ newid + ");";
+			String query = "INSERT INTO Appointment (appnt_id, adate, time_slot, status) Values("
+				+ newid + ", '" + date + "', '" + slot + "', '" + status.toUpperCase() + "');";
 
 			esql.executeUpdate(query);
 		}catch(Exception e){
@@ -379,14 +391,16 @@ public class DBproject{
 	public static void MakeAppointment(DBproject esql) {//4
 		// Given a patient, a doctor and an appointment of the doctor that s/he wants to take, add an appointment to the DB
 		try{
+			boolean newpatient = false;
 			System.out.print("\tEnter patient ID: $");
-			int patientIdCheck = Integer.parseInt(in.readLine());
-			String idCheck = "SELECT id FROM Patient WHERE id = " + patientIdCheck + ";";
+			String patientIdCheck = in.readLine();
+			String idCheck = "SELECT patient_id FROM Patient WHERE patient_id = " + patientIdCheck + ";";
 			if(esql.executeQueryAndPrintResult(idCheck) == 0){ //patient id not found
+				newpatient = true;
 				while(true){
 					System.out.print("\tPatient ID not found. Please input patient details: ");
 					try{
-					int newid = esql.executeQuery("SELECT patient_ID FROM Patient");
+					int patid = (esql.executeQueryAndReturnResult("SELECT patient_ID FROM Patient")).size();
 
 					System.out.print("\tEnter the patient's name: $");
 					String name = in.readLine();
@@ -400,10 +414,8 @@ public class DBproject{
 					System.out.print("\tEnter the patient's address: $");
 					String address = in.readLine();
 
-					String query = "INSERT INTO Patient SELECT " + newid + ", '" + name + "', '"
-						+ gender + "', " + age + ", '" + address + "', 0 "
-						+ "WHERE NOT EXISTS(SELECT * FROM Patient WHERE patient_ID = "
-						+ newid + ");";
+					String query = "INSERT INTO Patient (patient_id, name, gtype, age, address, number_of_appts) Values(" + patid + ", '" + name + "', '"
+						+ gender + "', " + age + ", '" + address + "', 0);";
 
 					esql.executeUpdate(query);
 					break;
@@ -416,24 +428,26 @@ public class DBproject{
 				try{
 					System.out.print("\tPlease input your doctor's ID: $");
 					String doc_id = in.readLine();
-					idCheck = "SELECT doctor_ID FROM Doctor WHERE doctor_ID = " + doc_id + ";";
+					idCheck = "SELECT doctor_ID FROM has_appointment WHERE doctor_ID = " + doc_id + ";";
 					if(esql.executeQueryAndPrintResult(idCheck) == 0){
 						throw new RuntimeException("Invalid Doctor ID. Doctor not found in Database.\n");
 					} else {
-						System.out.print("Please input the earliest date (YYYY-MM-DD): $");
-						String date1 = in.readLine();
+						System.out.print("\tPlease input your appointment's ID: $");
+                                        	String appt_id = in.readLine();
 
-						System.out.print("\tInput the latest date (YYYY-MM-DD): $");
-						String date2 = in.readLine();
-						
-						//Changed query to where it should show only AVAILABLE appointments
-						//rather than available & active
-						String query = "SELECT A.appnt_ID, A.adate, A.time_slot, A.status FROM Appointment A WHERE A.adate >= '"
-						+ date1 + "' AND A.adate <= '" + date2 + "' AND A.appnt_ID IN (SELECT P.appnt_ID FROM Appointment P, has_appointment H WHERE P.status = 'AV' AND H.doctor_ID = "
-						+ doc_id + " AND H.appt_ID = P.appnt_ID);";
-
-						int rowCount = esql.executeQueryAndPrintResult(query);
-						System.out.print("\tThe list of available appointments is shown here: " + rowCount) ;
+						idCheck = "SELECT appnt_ID FROM Appointment WHERE appnt_ID = " + appt_id + ";";
+						if (esql.executeQueryAndPrintResult(idCheck) == 0){
+							throw new RuntimeException("Invalid Doctor ID. Doctor not found in Database.\n");
+						} else {
+								
+							switch (getStatus(esql.executeQueryAndReturnResult("SELECT A.status FROM Appointment A, has_appointment H WHERE A.appnt_id = " 
+								+ appt_id + " AND H.doctor_id = " + doc_id + " AND A.appnt_id = H.appt_id"))){
+                                        		case 1: break;
+                                        		case 2: esql.executeUpdate("UPDATE Appointment SET status = 'WL' WHERE appnt_id = " + appt_id + ";"); break;
+                                        		case 3: esql.executeUpdate("UPDATE Appointment SET status = 'AC' WHERE appnt_id = " + appt_id + ";"); break;
+                                        		case 4: break;
+                                			}
+						}
 					}
 					break;
 				} catch (Exception e){
@@ -441,31 +455,18 @@ public class DBproject{
 					continue;
 				}
 			}
-			
-			try{ //Patient inserting requested appointment slot
-				int newid = esql.executeQuery("SELECT appnt_ID FROM Appointment");
-	
-				System.out.print("\tTo make a new appointment please enter your requested date (YYYY-MM-DD): $");
-				String date = in.readLine();
-	
-				System.out.print("\tEnter the appointment's time slot (H:MM-H:MM): $");
-				String slot = in.readLine();
-	
-				// System.out.print("\tEnter the appointment's status (AC, AV): $");
-				// String status = in.readLine();
-	
-				String query = "INSERT INTO Appointment SELECT "
-					+ newid + ", '" + date + "', '" + slot + "', 'AC'"
-					+ " WHERE NOT EXISTS(SELECT * FROM Appointment WHERE appnt_ID = "
-					+ newid + ");";
-	
-				esql.executeUpdate(query);
-			}catch(Exception e){
-				 System.err.println (e.getMessage());
+
+			//increment number of patient's appointments by 1
+			//esql.executeUpdate("UPDATE TABLE Patient SET")
+			if (newpatient) {
+				esql.executeUpdate("UPDATE Patient SET number_of_appts = number_of_appts + 1 WHERE patient_id = " + integer.toString(patid) + ";");
+			} else {
+				esql.executeUpdate("UPDATE Patient SET number_of_appts = number_of_appts + 1 WHERE patient_id = " + patientIdCheck + ";");
 			}
 		}catch(Exception e){
-			System.err.println(e.getMessage());
-		}
+                        System.err.println (e.getMessage());
+                }
+
 	}
 
 	public static void ListAppointmentsOfDoctor(DBproject esql) {//5
